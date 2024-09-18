@@ -27,6 +27,10 @@ namespace ConnectingToSQL.Controllers
         [HttpPost]
         public IActionResult Create(CourseToDb courseToDb)
         {
+            if(!ModelState.IsValid)
+            {
+                return View(courseToDb);
+            }
             Course course = new Course()
             {
                 Name = courseToDb.Name,

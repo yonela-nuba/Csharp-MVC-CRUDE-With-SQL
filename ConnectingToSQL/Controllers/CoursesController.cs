@@ -43,5 +43,64 @@ namespace ConnectingToSQL.Controllers
             return RedirectToAction("Index" , "Courses");
        }
 
+        public IActionResult Edit(int id)
+        {
+            var course = context.Courses.Find(id);
+            if(course == null)
+            {
+                return RedirectToAction("Index", "Courses");
+            }
+
+            CourseToDb courseToDb = new CourseToDb()
+            {
+                Name = course.Name,
+                ModuleName = course.ModuleName,
+                Description = course.Description,
+            };
+
+            ViewData["CourseId"] = course.Id;
+
+            return View(courseToDb);
+
+        }
+        [HttpPost]
+        public IActionResult Edit(int id,CourseToDb courseToDb) 
+        {
+            var course = context.Courses.Find(id);
+            if( course == null)
+            {
+                return RedirectToAction("Index", "Courses");
+            }
+
+            if(!ModelState.IsValid)
+            {
+                ViewData["CourseId"] = course.Id;
+                return View(courseToDb);
+            }
+
+            course.Name = courseToDb.Name;
+            course.ModuleName = courseToDb.ModuleName;
+            course.Description = courseToDb.Description;
+
+            context.SaveChanges();
+            return RedirectToAction("Index", "Courses");
+        }
+
+        public IActionResult Delete(int id)
+        {
+            var course = context.Courses.Find(id);
+            if(course == null)
+            {
+                return RedirectToAction("Index", "Courses");
+            }
+
+            context.Courses.Remove(course);
+            context.SaveChanges(true);
+            return RedirectToAction("Index", "Courses");
+
+        }
+
+
+
     }
 }
